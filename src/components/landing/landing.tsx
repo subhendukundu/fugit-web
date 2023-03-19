@@ -1,5 +1,5 @@
-import { component$ } from "@builder.io/qwik";
-import { Form, Link } from "@builder.io/qwik-city";
+import { component$, useSignal } from "@builder.io/qwik";
+import { Link } from "@builder.io/qwik-city";
 import { Loader1 as HeroImage } from "~/components/icons/loader";
 
 type Props = {
@@ -7,13 +7,10 @@ type Props = {
 };
 
 export default component$(({ action }: Props) => {
+  const input = useSignal("");
   return (
     <div class="flex flex-1 flex-col lg:flex-row">
-      <Form
-        action={action}
-        spaReset
-        class="flex-1 lg:max-w-lg lg:mx-auto mt-16"
-      >
+      <div class="flex-1 lg:max-w-lg lg:mx-auto mt-16">
         <h1 class="text-3xl font-medium text-secondary">
           Same Quirks, New Friends!
         </h1>
@@ -53,12 +50,20 @@ export default component$(({ action }: Props) => {
               placeholder="Search"
               required
               name="search"
+              onChange$={(e) => {
+                input.value = e.target.value;
+              }}
             />
           </div>
         </div>
         <div class="flex items-center space-x-4 mt-8">
           <button
-            type="submit"
+            onClick$={async () => {
+              await action.run({
+                search: input.value,
+              });
+            }}
+            type="button"
             class="py-2 px-8 text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
           >
             Search
@@ -70,7 +75,7 @@ export default component$(({ action }: Props) => {
             Explore
           </Link>
         </div>
-      </Form>
+      </div>
       <div class="flex-1 lg:max-w-lg lg:mx-auto">
         <HeroImage />
       </div>
