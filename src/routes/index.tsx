@@ -1,12 +1,12 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead} from "@builder.io/qwik-city";
-import { zod$, z, routeAction$, routeLoader$ } from "@builder.io/qwik-city";
+import { zod$, z, globalAction$, routeLoader$ } from "@builder.io/qwik-city";
 import Landing from "~/components/landing/landing";
 import Loader from "~/components/loader/loader";
 import SearchResults from "~/components/search-results/search-results";
 import { callApi } from "~/utils/fetch";
 
-export const useSearchAction = routeAction$(
+export const useSearchAction = globalAction$(
   async (data, { fail, platform }) => {
     try {
       const result: any = await callApi(
@@ -33,7 +33,7 @@ export const useSearchAction = routeAction$(
   })
 );
 
-export const useCreateEventAction = routeAction$(
+/* export const useCreateEventAction = globalAction$(
   async (data, { fail, platform }) => {
     try {
       const result: any = await callApi(
@@ -58,7 +58,7 @@ export const useCreateEventAction = routeAction$(
   zod$({
     search: z.string(),
   })
-);
+); */
 
 export const useBaseUrl = routeLoader$(({ platform }) => {
   const baseUrl =
@@ -71,7 +71,7 @@ export const useBaseUrl = routeLoader$(({ platform }) => {
 export default component$(() => {
   const search = useSearchAction();
   const baseUrl = useBaseUrl();
-  const event = useCreateEventAction();
+  // const event = useCreateEventAction();
 
   return (
     <>
@@ -85,7 +85,7 @@ export default component$(() => {
         ) : (
           <SearchResults
             baseUrl={baseUrl.value.baseUrl}
-            action={event}
+            // action={event}
             results={search?.value?.results}
           />
         )
