@@ -13,8 +13,11 @@ export const useSearchAction = globalAction$(
       console.log(baseUrl);
       const result: any = await callApi(
         {
-          endpoint: `/search?q=${data?.search}`,
-          method: "GET",
+          endpoint: `/search`,
+          method: "POST",
+          body: {
+            input: data?.search,
+          },
         },
         baseUrl
       );
