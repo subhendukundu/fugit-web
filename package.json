@@ -39,5 +39,8 @@
     "vite": "4.2.0",
     "vite-tsconfig-paths": "3.5.0",
     "wrangler": "latest"
+  },
+  "dependencies": {
+    "lottie-web": "^5.10.2"
   }
 }
