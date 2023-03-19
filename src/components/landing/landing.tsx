@@ -1,14 +1,18 @@
 import { component$, useSignal } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import { Loader1 as HeroImage } from "~/components/icons/loader";
+import Loader from "../loader/loader";
 
 type Props = {
   action?: any;
+  loading: boolean;
 };
 
-export default component$(({ action }: Props) => {
+export default component$(({ action, loading }: Props) => {
   const input = useSignal("");
-  return (
+  return loading ? (
+    <Loader />
+  ) : (
     <div class="flex flex-1 flex-col lg:flex-row">
       <div class="flex-1 lg:max-w-lg lg:mx-auto mt-16">
         <h1 class="text-3xl font-medium text-secondary">

@@ -2,7 +2,6 @@ import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { zod$, z, globalAction$, routeLoader$ } from "@builder.io/qwik-city";
 import Landing from "~/components/landing/landing";
-import Loader from "~/components/loader/loader";
 import SearchResults from "~/components/search-results/search-results";
 import { callApi } from "~/utils/fetch";
 
@@ -13,14 +12,41 @@ export const useSearchAction = globalAction$(
       console.log(baseUrl);
       const result: any = await callApi(
         {
-          endpoint: `/search`,
-          method: "POST",
-          body: {
-            input: data?.search,
-          },
+          endpoint: `/search?q=${data.search}`,
+          method: "GET",
         },
         baseUrl
       );
+      if (result) {
+        return result;
+      }
+      return fail(403, {
+        message: "Unexpected error, please retry!",
+      });
+    } catch (e) {
+      return fail(403, {
+        message: "Server Error!",
+      });
+    }
+  },
+  zod$({
+    search: z.string(),
+  })
+);
+
+export const useEventAction = globalAction$(
+  async (data, { fail, env }) => {
+    try {
+      const baseUrl = env.get("VITE_API_URL") as string;
+      console.log(baseUrl);
+      /* const result: any = await callApi(
+        {
+          endpoint: `/search?q=${data.search}`,
+          method: "GET",
+        },
+        baseUrl
+      ); */
+      const result = {};
       if (result) {
         return result;
       }
@@ -52,9 +78,7 @@ export default component$(() => {
 
   return (
     <>
-      {search.isRunning ? (
-        <Loader />
-      ) : search.value ? (
+      {search.value ? (
         search.value?.failed ? (
           <div class="bg-red-500 text-white p-2 mt-2">
             Error: {search.value.failed}
@@ -67,7 +91,7 @@ export default component$(() => {
           />
         )
       ) : (
-        <Landing action={search} />
+        <Landing action={search} loading={search.isRunning} />
       )}
     </>
   );

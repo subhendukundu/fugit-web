@@ -1,5 +1,4 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { Form } from "@builder.io/qwik-city";
 import type { IdeaWithPlaces } from "~/types";
 import StarRating from "../star-rating/star-rating";
 
@@ -12,7 +11,7 @@ interface Props {
 export default component$(({ baseUrl, action, results }: Props) => {
   const selectedEvent = useSignal("");
   return (
-    <Form action={action} spaReset class="flex-1 mt-20 mb-20">
+    <div class="flex-1 mt-20 mb-20">
       <div>
         {results.map(({ idea, places }) => (
           <div class="mt-16" key={idea.activity_name}>
@@ -84,8 +83,13 @@ export default component$(({ baseUrl, action, results }: Props) => {
       {selectedEvent?.value && (
         <div class="fixed bottom-10 right-14 z-1">
           <button
-            type="submit"
+            type="button"
             class="flex items-center py-2 px-8 text-white font-medium bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
+            onClick$={async () => {
+              await action.run({
+                placeId: selectedEvent?.value,
+              });
+            }}
           >
             <span class="pr-2">Share Event</span>
             <svg
@@ -107,6 +111,6 @@ export default component$(({ baseUrl, action, results }: Props) => {
           </button>
         </div>
       )}
-    </Form>
+    </div>
   );
 });
