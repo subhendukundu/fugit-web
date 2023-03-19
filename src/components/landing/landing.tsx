@@ -11,7 +11,6 @@ export default component$(({ action }: Props) => {
     <div class="flex flex-1 flex-col lg:flex-row">
       <Form
         action={action}
-        spaReset
         class="flex-1 lg:max-w-lg lg:mx-auto mt-16"
       >
         <h1 class="text-3xl font-medium text-secondary">
