@@ -58,7 +58,7 @@ export default component$(() => {
           </div>
         ) : (
           <SearchResults
-            baseUrl={baseUrl.value.baseUrl}
+            baseUrl={baseUrl.value.baseUrl as string}
             // action={event}
             results={search?.value?.results}
           />
