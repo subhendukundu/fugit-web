@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead} from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { zod$, z, globalAction$, routeLoader$ } from "@builder.io/qwik-city";
 import Landing from "~/components/landing/landing";
 import Loader from "~/components/loader/loader";
@@ -7,14 +7,16 @@ import SearchResults from "~/components/search-results/search-results";
 import { callApi } from "~/utils/fetch";
 
 export const useSearchAction = globalAction$(
-  async (data, { fail, platform }) => {
+  async (data, { fail, env }) => {
     try {
+      const baseUrl = env.get("VITE_API_URL") as string;
+      console.log(baseUrl);
       const result: any = await callApi(
         {
           endpoint: `/search?q=${data?.search}`,
           method: "GET",
         },
-        platform
+        baseUrl
       );
       if (result) {
         return result;
@@ -33,36 +35,8 @@ export const useSearchAction = globalAction$(
   })
 );
 
-/* export const useCreateEventAction = globalAction$(
-  async (data, { fail, platform }) => {
-    try {
-      const result: any = await callApi(
-        {
-          endpoint: `/search?q=${data?.search}`,
-          method: "GET",
-        },
-        platform
-      );
-      if (result) {
-        return result;
-      }
-      return fail(403, {
-        message: "Unexpected error, please retry!",
-      });
-    } catch (e) {
-      return fail(403, {
-        message: "Server Error!",
-      });
-    }
-  },
-  zod$({
-    search: z.string(),
-  })
-); */
-
-export const useBaseUrl = routeLoader$(({ platform }) => {
-  const baseUrl =
-    platform?.env?.["VITE_API_URL"] || import.meta.env["VITE_API_URL"];
+export const useBaseUrl = routeLoader$(({ env }) => {
+  const baseUrl = env.get("VITE_API_URL");
   return {
     baseUrl,
   };

@@ -1,4 +1,3 @@
-import type { PlatformCloudflarePages } from "@builder.io/qwik-city/middleware/cloudflare-pages";
 
 export interface ErrorResponse {
   error: {
@@ -18,11 +17,9 @@ interface ApiOptions {
 
 export async function callApi<T>(
   options: ApiOptions,
-  platform?: PlatformCloudflarePages
+  baseUrl: string,
 ): Promise<T> {
   const { endpoint, method, headers, body } = options;
-  const baseUrl =
-    platform?.env?.["VITE_API_URL"] || import.meta.env["VITE_API_URL"];
   const apiUrl = `${baseUrl}${endpoint}`;
 
   const response = await fetch(apiUrl, {
