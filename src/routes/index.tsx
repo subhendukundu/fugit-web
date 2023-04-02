@@ -1,15 +1,14 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { zod$, z, globalAction$, routeLoader$ } from "@builder.io/qwik-city";
+import { zod$, z, routeLoader$, routeAction$ } from "@builder.io/qwik-city";
 import Landing from "~/components/landing/landing";
 import SearchResults from "~/components/search-results/search-results";
-import { callApi } from "~/utils/fetch";
+import { callApi, getAccessTokenFromCookie } from "~/utils/fetch";
 
-export const useSearchAction = globalAction$(
+export const useSearchAction = routeAction$(
   async (data, { fail, env }) => {
     try {
       const baseUrl = env.get("VITE_API_URL") as string;
-      console.log(baseUrl);
       const result: any = await callApi(
         {
           endpoint: `/search?q=${data.search}`,
@@ -34,21 +33,21 @@ export const useSearchAction = globalAction$(
   })
 );
 
-export const useEventAction = globalAction$(
-  async (data, { fail, env }) => {
+export const useCreateEventAction = routeAction$(
+  async (data, { fail, env, cookie, redirect }) => {
     try {
       const baseUrl = env.get("VITE_API_URL") as string;
-      console.log(baseUrl);
-      /* const result: any = await callApi(
+      const result: any = await callApi(
         {
-          endpoint: `/search?q=${data.search}`,
-          method: "GET",
+          endpoint: `/accounts/user/events`,
+          method: "POST",
+          body: data,
         },
-        baseUrl
-      ); */
-      const result = {};
+        baseUrl,
+        cookie
+      );
       if (result) {
-        return result;
+        throw redirect(302, `/preview/${data.slug}/p/${result?.data?.id}`);
       }
       return fail(403, {
         message: "Unexpected error, please retry!",
@@ -60,21 +59,36 @@ export const useEventAction = globalAction$(
     }
   },
   zod$({
-    search: z.string(),
+    slug: z.string(),
+    name: z.string(),
+    description: z.string(),
+    location_name: z.string(),
+    area_name: z.string(),
+    formatted_address: z.string(),
+    place_id: z.string(),
+    rating: z.number(),
+    user_ratings_total: z.number(),
+    photos: z.string(),
+    geometry: z.object({
+      lat: z.number(),
+      lng: z.number(),
+    }),
   })
 );
 
-export const useBaseUrl = routeLoader$(({ env }) => {
+export const useAppDetails = routeLoader$(({ env, cookie }) => {
   const baseUrl = env.get("VITE_API_URL");
+  const authState = getAccessTokenFromCookie(cookie);
   return {
     baseUrl,
+    loggedIn: !!authState?.access_token,
   };
 });
 
 export default component$(() => {
   const search = useSearchAction();
-  const baseUrl = useBaseUrl();
-  // const event = useCreateEventAction();
+  const appDetails = useAppDetails();
+  const event = useCreateEventAction();
 
   return (
     <>
@@ -85,9 +99,10 @@ export default component$(() => {
           </div>
         ) : (
           <SearchResults
-            baseUrl={baseUrl.value.baseUrl as string}
-            // action={event}
+            baseUrl={appDetails.value.baseUrl as string}
+            action={event}
             results={search?.value?.results}
+            loggedIn={appDetails?.value?.loggedIn}
           />
         )
       ) : (
@@ -104,6 +119,11 @@ export const head: DocumentHead = {
       name: "description",
       content:
         "Ready for your next big adventure? Fugit is the app that helps you make it happen! Our AI-powered platform connects you with like-minded individuals who share your passion for exploring new places and trying new things. From hiking trails to hidden cafes, Fugit's personalized recommendations and social planning tools make it easy to create unforgettable memories.",
+    },
+    {
+      name: "keywords",
+      content:
+        "Fugit, social app, find like-minded people, AI-powered platform, personalized recommendations, social planning tools, exploring new places, trying new things, unforgettable memories",
     },
   ],
 };

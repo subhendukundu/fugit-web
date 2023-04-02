@@ -1,35 +1,66 @@
 import { component$, Slot } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import Header from "~/components/header/header";
+import { decodeAccessToken } from "~/utils/auth";
+import { getAccessTokenFromCookie } from "~/utils/fetch";
 
-export const useServerTimeLoader = routeLoader$(() => {
-  return {
-    date: new Date().toISOString(),
-  };
-});
+export const userAuthStateLoader = routeLoader$(
+  ({ cookie, cacheControl, redirect }) => {
+    const authState = getAccessTokenFromCookie(cookie);
+    if (authState?.access_token) {
+      const decodedToken = decodeAccessToken(authState?.access_token);
+
+      if (!decodedToken?.email_verified) {
+        // throw redirect(302, "/verify");
+      }
+
+      return {
+        loggedIn: true,
+        accessToken: authState?.access_token,
+      };
+    }
+
+    cacheControl({
+      noCache: true,
+      private: true,
+    });
+
+    return {
+      loggedIn: false,
+    };
+  }
+);
 
 export default component$(() => {
+  const authState = userAuthStateLoader();
+
   return (
     <main class="flex flex-col min-h-screen container mx-auto px-4" role="main">
-      <Header />
+      <Header
+        isLoggedIn={authState.value?.loggedIn}
+        key={authState.value?.accessToken}
+      />
       <div class="flex-1">
         <Slot />
       </div>
       <footer>
-        <div class="flex flex-row items-center mb-4 text-sm">
+        <div class="flex flex-row items-center mb-4 text-sm text-primary font-semibold">
           <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            xmlns="http://www.w3.org/2000/svg"
+            class="mr-1 stroke-primary fill-primary"
             stroke="currentColor"
             fill="currentColor"
-            stroke-width="0"
-            viewBox="0 0 1024 1024"
-            height="1em"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-            class="mr-1"
           >
-            <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372zm5.6-532.7c53 0 89 33.8 93 83.4.3 4.2 3.8 7.4 8 7.4h56.7c2.6 0 4.7-2.1 4.7-4.7 0-86.7-68.4-147.4-162.7-147.4C407.4 290 344 364.2 344 486.8v52.3C344 660.8 407.4 734 517.3 734c94 0 162.7-58.8 162.7-141.4 0-2.6-2.1-4.7-4.7-4.7h-56.8c-4.2 0-7.6 3.2-8 7.3-4.2 46.1-40.1 77.8-93 77.8-65.3 0-102.1-47.9-102.1-133.6v-52.6c.1-87 37-135.5 102.2-135.5z"></path>
+            <path
+              d="M6 0.75C3.10078 0.75 0.75 3.10078 0.75 6C0.75 8.89922 3.10078 11.25 6 11.25C8.89922 11.25 11.25 8.89922 11.25 6C11.25 3.10078 8.89922 0.75 6 0.75ZM6 10.3594C3.59297 10.3594 1.64062 8.40703 1.64062 6C1.64062 3.59297 3.59297 1.64062 6 1.64062C8.40703 1.64062 10.3594 3.59297 10.3594 6C10.3594 8.40703 8.40703 10.3594 6 10.3594ZM6.06562 4.1168C6.68672 4.1168 7.10859 4.51289 7.15547 5.09414C7.15898 5.14336 7.2 5.18086 7.24922 5.18086H7.91367C7.94414 5.18086 7.96875 5.15625 7.96875 5.12578C7.96875 4.10977 7.16719 3.39844 6.06211 3.39844C4.77422 3.39844 4.03125 4.26797 4.03125 5.70469V6.31758C4.03125 7.74375 4.77422 8.60156 6.06211 8.60156C7.16367 8.60156 7.96875 7.9125 7.96875 6.94453C7.96875 6.91406 7.94414 6.88945 7.91367 6.88945H7.24805C7.19883 6.88945 7.15898 6.92695 7.1543 6.975C7.10508 7.51523 6.68438 7.88672 6.06445 7.88672C5.29922 7.88672 4.86797 7.32539 4.86797 6.32109V5.70469C4.86914 4.68516 5.30156 4.1168 6.06562 4.1168Z"
+              fill="black"
+              class="stroke-primary fill-primary"
+            />
           </svg>
-          Fugit. 2023
+          fugit. 2023
         </div>
       </footer>
     </main>

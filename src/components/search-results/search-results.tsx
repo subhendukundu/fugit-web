@@ -1,15 +1,19 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import type { IdeaWithPlaces } from "~/types";
+import type { IdeaWithPlaces, IdeaWithPlace } from "~/types";
+import { showNotification } from "~/utils/notification";
+import { toUrlFriendly } from "~/utils/string";
+import Button from "../button";
 import StarRating from "../star-rating/star-rating";
 
 interface Props {
   baseUrl: string;
   action?: any;
   results: IdeaWithPlaces[];
+  loggedIn: boolean;
 }
 
-export default component$(({ baseUrl, action, results }: Props) => {
-  const selectedEvent = useSignal("");
+export default component$(({ baseUrl, action, results, loggedIn }: Props) => {
+  const selectedEvent = useSignal<IdeaWithPlace>();
   return (
     <div class="flex-1 mt-20 mb-20">
       <div>
@@ -31,14 +35,17 @@ export default component$(({ baseUrl, action, results }: Props) => {
                     value={place.place_id}
                     class="peer sr-only"
                     onChange$={() => {
-                      selectedEvent.value = place.place_id;
+                      selectedEvent.value = {
+                        idea,
+                        place,
+                      };
                     }}
                   />
                   <div class="peer-checked:border-primary border-2 rounded-lg p-4 flex flex-col justify-between h-full">
                     <div class="flex">
                       <div class="flex-shrink-0 h-32 w-32 mr-4">
                         <img
-                          src={`${baseUrl}/photos/${place.photos?.[0].url}`}
+                          src={`${baseUrl}/photos/${place.photos}`}
                           alt={place.name}
                           class="h-full w-full object-cover rounded-lg"
                         />
@@ -80,35 +87,59 @@ export default component$(({ baseUrl, action, results }: Props) => {
           </div>
         ))}
       </div>
-      {selectedEvent?.value && (
+      {selectedEvent?.value?.place?.place_id && (
         <div class="fixed bottom-10 right-14 z-1">
-          <button
+          <Button
+            isRunning={action.isRunning}
             type="button"
-            class="flex items-center py-2 px-8 text-white font-medium bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
+            styles="flex items-center py-2 px-8 text-white font-medium bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
             onClick$={async () => {
-              await action.run({
-                placeId: selectedEvent?.value,
-              });
+              if (loggedIn) {
+                await action.submit({
+                  name: selectedEvent.value?.idea?.activity_name,
+                  description: selectedEvent.value?.idea?.short_description,
+                  area_name: selectedEvent.value?.idea?.location,
+                  location_name: selectedEvent?.value?.place?.name,
+                  formatted_address:
+                    selectedEvent?.value?.place?.formatted_address,
+                  place_id: selectedEvent?.value?.place?.place_id,
+                  rating: selectedEvent?.value?.place?.rating,
+                  user_ratings_total:
+                    selectedEvent?.value?.place?.user_ratings_total,
+                  photos: selectedEvent?.value?.place?.photos,
+                  geometry: selectedEvent?.value?.place?.geometry?.location,
+                  slug: toUrlFriendly(
+                    `${selectedEvent.value?.idea?.activity_name} ${selectedEvent.value?.idea?.location}`
+                  ),
+                });
+              } else {
+                showNotification(
+                  "You need to log in to share an event!",
+                  "error"
+                );
+              }
             }}
           >
-            <span class="pr-2">Share Event</span>
-            <svg
-              stroke="currentColor"
-              fill="none"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              height="1.5em"
-              width="1.5em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-          </button>
+            <>
+              <span class="pr-2">Share Event</span>
+              <svg
+                stroke="currentColor"
+                fill="none"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                height="1.5em"
+                width="1.5em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12.75 15l3-3m0 0l-3-3m3 3h-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+            </>
+          </Button>
         </div>
       )}
     </div>

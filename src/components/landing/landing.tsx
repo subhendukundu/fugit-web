@@ -32,7 +32,7 @@ export default component$(({ action, loading }: Props) => {
         </p>
         <div class="flex items-center mt-8">
           <label for="simple-search" class="sr-only">
-            Search
+            Generate
           </label>
           <div class="relative w-full">
             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -54,7 +54,7 @@ export default component$(({ action, loading }: Props) => {
               type="text"
               id="search"
               class="border border-opacity-30 border-primary text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
-              placeholder="Search"
+              placeholder="What's your vibe?"
               required
               name="search"
             />
@@ -65,7 +65,7 @@ export default component$(({ action, loading }: Props) => {
             type="submit"
             class="py-2 px-8 text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
           >
-            Search
+            Generate
           </button>
           <Link
             href="/explore"
