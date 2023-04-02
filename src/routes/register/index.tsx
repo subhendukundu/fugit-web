@@ -2,7 +2,7 @@ import { component$, useStore } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { Form, routeAction$, zod$, z } from "@builder.io/qwik-city";
 import { Link } from "@builder.io/qwik-city";
-import Button from "~/components/button";
+import Button from "~/components/button/button";
 import { register } from "~/utils/auth";
 import { Loader5 as HeroImage } from "~/components/icons/loader";
 import type { ErrorResponse } from "~/utils/fetch";

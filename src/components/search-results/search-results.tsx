@@ -2,7 +2,7 @@ import { component$, useSignal } from "@builder.io/qwik";
 import type { IdeaWithPlaces, IdeaWithPlace } from "~/types";
 import { showNotification } from "~/utils/notification";
 import { toUrlFriendly } from "~/utils/string";
-import Button from "../button";
+import Button from "../button/button";
 import StarRating from "../star-rating/star-rating";
 
 interface Props {

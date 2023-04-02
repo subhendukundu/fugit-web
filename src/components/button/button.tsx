@@ -1,4 +1,4 @@
-import { PropFunction, Slot } from "@builder.io/qwik";
+import { Slot } from "@builder.io/qwik";
 import { component$ } from "@builder.io/qwik";
 
 type Props = {
@@ -6,11 +6,11 @@ type Props = {
   label?: string;
   type: "submit" | "reset" | "button" | undefined;
   styles?: string;
-  onClick$?: PropFunction<() => void>;
+  onClick$?: any;
   disabled?: boolean;
 };
 
-export default component$(
+export default component$<Props>(
   ({
     isRunning,
     label,
@@ -18,7 +18,7 @@ export default component$(
     type = "submit",
     onClick$,
     disabled,
-  }: Props) => {
+  }) => {
     return (
       <button
         type={type}

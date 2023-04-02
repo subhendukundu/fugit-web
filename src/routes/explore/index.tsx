@@ -10,7 +10,7 @@ import { routeLoader$ } from "@builder.io/qwik-city";
 import EventCard from "~/components/event-card/event-card";
 import { NotFoundIcon } from "~/components/icons/not-found";
 import Loader from "~/components/loader/loader";
-import { Event } from "~/types";
+import type { Event } from "~/types";
 import { callApi } from "~/utils/fetch";
 
 export const useBaseUrl = routeLoader$(({ env }) => {

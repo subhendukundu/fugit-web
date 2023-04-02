@@ -7,7 +7,7 @@ import {
   zod$,
   z,
 } from "@builder.io/qwik-city";
-import Button from "~/components/button";
+import Button from "~/components/button/button";
 import SettingsForm from "~/components/settings-form";
 import { eventSettingsFields } from "~/config/preview-settings";
 import { callApi, getAccessTokenFromCookie } from "~/utils/fetch";
