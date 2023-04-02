@@ -5,7 +5,7 @@ import { decodeAccessToken } from "~/utils/auth";
 import { getAccessTokenFromCookie } from "~/utils/fetch";
 
 export const userAuthStateLoader = routeLoader$(
-  ({ cookie, cacheControl, redirect }) => {
+  ({ cookie, cacheControl }) => {
     const authState = getAccessTokenFromCookie(cookie);
     if (authState?.access_token) {
       const decodedToken = decodeAccessToken(authState?.access_token);

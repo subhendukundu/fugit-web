@@ -1,10 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 
-type Props = {
-  styles?: string;
-};
-
-export const NotFoundIcon = component$(({ styles }: Props) => {
+export const NotFoundIcon = component$(() => {
   return (
     <svg
       width="247"

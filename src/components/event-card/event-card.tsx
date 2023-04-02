@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import type { Event } from "~/types";
-import { BookmarkedIcon, BookmarkIcon } from "../icons/socials";
+// import { BookmarkedIcon, BookmarkIcon } from "../icons/socials";
 
 interface Props {
   baseUrl: string;

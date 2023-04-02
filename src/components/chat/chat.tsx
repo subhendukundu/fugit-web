@@ -7,7 +7,7 @@ import {
   useVisibleTask$,
 } from "@builder.io/qwik";
 import { useLocation } from "@builder.io/qwik-city";
-import { parseISO, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import AlwaysScrollToBottom from "../always-scroll-to-bottom/always-scroll-to-bottom";
 import { Ghost } from "../icons/ghost";
 
@@ -45,7 +45,7 @@ function replaceWithMessage(message: any) {
   }
 }
 
-export default component$(({ baseWssUrl, name, token }: Props) => {
+export default component$(({ baseWssUrl, token }: Props) => {
   const value = useSignal("");
   const messagesEndRef = useSignal<HTMLDivElement>();
   const websocketRef = useSignal<NoSerialize<WebSocket>>();
