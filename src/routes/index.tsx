@@ -3,6 +3,7 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { zod$, z, routeLoader$, routeAction$ } from "@builder.io/qwik-city";
 import Landing from "~/components/landing/landing";
 import SearchResults from "~/components/search-results/search-results";
+import { socialTags } from "~/config/social-tags";
 import { callApi, getAccessTokenFromCookie } from "~/utils/fetch";
 
 export const useSearchAction = routeAction$(
@@ -126,5 +127,6 @@ export const head: DocumentHead = {
       content:
         "Fugit, social app, find like-minded people, AI-powered platform, personalized recommendations, social planning tools, exploring new places, trying new things, unforgettable memories",
     },
+    ...socialTags,
   ],
 };
