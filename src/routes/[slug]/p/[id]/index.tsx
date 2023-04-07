@@ -8,6 +8,7 @@ import Chat from "~/components/chat/chat";
 import EventDetails from "~/components/event-details/event-details";
 import EventOwnerActions from "~/components/event-owner-actions/event-owner-actions";
 import EventRequestActions from "~/components/event-request-actions/event-request-actions";
+import { socialTags } from "~/config/social-tags";
 import { decodeAccessToken } from "~/utils/auth";
 import { callApi, getAccessTokenFromCookie } from "~/utils/fetch";
 
@@ -281,6 +282,7 @@ export const head: DocumentHead = ({ resolveValue }) => {
         name: "description",
         content: previewData.event?.description,
       },
+      ...socialTags
     ],
   };
 };

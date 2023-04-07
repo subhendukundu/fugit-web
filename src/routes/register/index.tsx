@@ -6,6 +6,7 @@ import Button from "~/components/button/button";
 import { register } from "~/utils/auth";
 import { Loader5 as HeroImage } from "~/components/icons/loader";
 import type { ErrorResponse } from "~/utils/fetch";
+import { socialTags } from "~/config/social-tags";
 
 export const useRegisterAction = routeAction$(
   async (data, { cookie, fail, redirect, env }) => {
@@ -176,5 +177,6 @@ export const head: DocumentHead = {
       content:
         "Fugit, register, sign up, adventure, community, profile, friends, experiences",
     },
+    ...socialTags
   ],
 };

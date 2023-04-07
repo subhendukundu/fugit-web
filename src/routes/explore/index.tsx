@@ -10,6 +10,7 @@ import { routeLoader$ } from "@builder.io/qwik-city";
 import EventCard from "~/components/event-card/event-card";
 import { NotFoundIcon } from "~/components/icons/not-found";
 import Loader from "~/components/loader/loader";
+import { socialTags } from "~/config/social-tags";
 import type { Event } from "~/types";
 import { callApi } from "~/utils/fetch";
 
@@ -149,5 +150,6 @@ export const head: DocumentHead = {
       content:
         "Fugit, explore, experiences, recommendations, social planning, groups",
     },
+    ...socialTags
   ],
 };

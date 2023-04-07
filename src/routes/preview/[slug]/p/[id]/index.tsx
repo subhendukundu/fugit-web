@@ -10,6 +10,7 @@ import {
 import Button from "~/components/button/button";
 import SettingsForm from "~/components/settings-form";
 import { eventSettingsFields } from "~/config/preview-settings";
+import { socialTags } from "~/config/social-tags";
 import { callApi, getAccessTokenFromCookie } from "~/utils/fetch";
 
 export const usePreviewDataLoader = routeLoader$(
@@ -127,6 +128,7 @@ export const head: DocumentHead = ({ resolveValue }) => {
         name: "description",
         content: previewData.event?.description,
       },
+      ...socialTags
     ],
   };
 };

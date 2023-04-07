@@ -5,6 +5,7 @@ import { Link } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import { signIn } from "~/utils/auth";
 import { Loader3 as HeroImage } from "~/components/icons/loader";
+import { socialTags } from "~/config/social-tags";
 
 export const useSigninAction = routeAction$(
   async (data, { cookie, fail, redirect, env }) => {
@@ -126,5 +127,6 @@ export const head: DocumentHead = {
       content:
         "Fugit, login, sign in, social app, tribe, adventure, explore, connect, meet, like-minded",
     },
+    ...socialTags
   ],
 };
