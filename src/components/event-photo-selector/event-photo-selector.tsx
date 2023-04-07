@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default component$(({ baseUrl, name, placeId, defaultValue }: Props) => {
-  const ageResource = useResource$(async () => {
+  const photoResource = useResource$(async () => {
     const result: any = await callApi(
       {
         endpoint: `/places/${placeId}`,
@@ -21,7 +21,7 @@ export default component$(({ baseUrl, name, placeId, defaultValue }: Props) => {
   });
   return (
     <Resource
-      value={ageResource}
+      value={photoResource}
       onPending={() => <div>Loading...</div>}
       onRejected={() => <div>Failed to get Images</div>}
       onResolved={(places: any) => {

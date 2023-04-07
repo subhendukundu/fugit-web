@@ -5,13 +5,11 @@ import { Form } from "@builder.io/qwik-city";
 import { Link } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import Chat from "~/components/chat/chat";
-import EventDate from "~/components/event-date/event-date";
+import EventDetails from "~/components/event-details/event-details";
 import EventOwnerActions from "~/components/event-owner-actions/event-owner-actions";
 import EventRequestActions from "~/components/event-request-actions/event-request-actions";
-import { Ghost } from "~/components/icons/ghost";
 import { decodeAccessToken } from "~/utils/auth";
 import { callApi, getAccessTokenFromCookie } from "~/utils/fetch";
-import { getGoogleMapsUrl } from "~/utils/place";
 
 export const usePreviewDataLoader = routeLoader$(
   async ({ env, params, redirect }) => {
@@ -206,44 +204,20 @@ export default component$(() => {
     <div class="mx-auto max-w-7xl lg:px-8 sm:px-8 mt-24 md:mt-8 mb-32 container mx-auto">
       <div class="flex flex-wrap gap-x-10 justify-start 4xl:justify-around">
         <div class="max-w-xl mb-8">
-          <h1 class="text-xl font-semibold text-text mb-4">{name}</h1>
-          <h2 class="text-sm font-normal mb-6 text-quinary">{description}</h2>
-          <EventDate
-            startDate={new Date(start_date)}
-            endDate={new Date(end_date)}
-            eventInfo={{
-              entries: total_seats,
-              left: booked_seats,
-            }}
+          <EventDetails
+            name={name}
+            description={description}
+            startDate={start_date}
+            endDate={end_date}
+            locationName={location_name}
+            formattedAddress={formatted_address}
+            placeId={place_id}
+            avatarUrl={avatarUrl}
+            hostOwner={hostOwner}
+            totalSeats={total_seats}
+            bookedSeats={booked_seats}
           />
-          <div class="mt-8">
-            <h2 class="text-md font-semibold text-text">Location</h2>
-            <div class="text-sm mt-3">{location_name}</div>
-            <div class="text-xs mt-1">{formatted_address}</div>
-            <a
-              href={getGoogleMapsUrl(formatted_address, place_id)}
-              target="_blank"
-              rel="noreferrer"
-              class="text-sm text-primary hover:bg-opacity-75 space-x-2 mt-2"
-            >
-              view on map
-            </a>
-          </div>
-          <div class="my-8">
-            <h2 class="text-md font-semibold text-text mt-8">Host Details</h2>
-            <div class="flex items-center mt-3">
-              {avatarUrl ? (
-                <img
-                  class="inline-block h-8 w-8 rounded-full ring-2 ring-white mr-4"
-                  src={avatarUrl}
-                  alt={hostOwner}
-                />
-              ) : (
-                <Ghost styles="fill-primary mr-4" />
-              )}
-              <span class="text-sm">{hostOwner}</span>
-            </div>
-          </div>
+
           <div class="flex justify-between max-w-sm mb-8">
             {isOwner && (
               <EventOwnerActions
@@ -285,7 +259,11 @@ export default component$(() => {
           />
           <div class={showChat ? "block" : "hidden"}>
             {baseWssUrl && (
-              <Chat baseWssUrl="ws://127.0.0.1:8787/api/v1" name={userName} token={token} />
+              <Chat
+                baseWssUrl="ws://127.0.0.1:8787/api/v1"
+                name={userName}
+                token={token}
+              />
             )}
           </div>
         </div>

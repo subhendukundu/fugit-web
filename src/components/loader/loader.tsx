@@ -47,7 +47,7 @@ export default component$(() => {
   return (
     <div class="flex flex-col items-center justify-center">
       <div class="max-w-sm" ref={canvas}></div>
-      <p class="text-gray-500 text-sm mt-2">Loading...</p>
+      <p class="text-gray-500 text-sm mt-2">This can take upto ~30 seconds...</p>
     </div>
   );
 });

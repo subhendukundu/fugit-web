@@ -16,11 +16,11 @@ export const useSearchAction = routeAction$(
         },
         baseUrl
       );
-      if (result) {
+      if (!result?.message) {
         return result;
       }
       return fail(403, {
-        message: "Unexpected error, please retry!",
+        message: "Unexpected error, please refresh the page!",
       });
     } catch (e) {
       return fail(403, {
@@ -93,7 +93,7 @@ export default component$(() => {
   return (
     <>
       {search.value ? (
-        search.value?.failed ? (
+        search.value.failed ? (
           <div class="bg-red-500 text-white p-2 mt-2">
             Error: {search.value.failed}
           </div>
@@ -103,6 +103,7 @@ export default component$(() => {
             action={event}
             results={search?.value?.results}
             loggedIn={appDetails?.value?.loggedIn}
+            title={search?.formData?.get("search") as string}
           />
         )
       ) : (
