@@ -89,7 +89,7 @@ export default component$(() => {
       onPending={() => <Loader />}
       onRejected={() => <div>Failed to fetch Events</div>}
       onResolved={(data: any) => {
-        return data.length ? (
+        return data?.length ? (
           <div class="flex-1 mt-20 mb-20">
             <form
               class="flex justify-center items-center flex-col sm:flex-row"
@@ -126,7 +126,7 @@ export default component$(() => {
               ))}
             </div>
           </div>
-        ): (
+        ) : (
           <div class="flex justify-center items-center">
             <NotFoundIcon />
           </div>
