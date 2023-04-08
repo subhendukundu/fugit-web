@@ -1,10 +1,8 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { Form, routeAction$, zod$, z } from "@builder.io/qwik-city";
-import { Link } from "@builder.io/qwik-city";
 import Button from "~/components/button/button";
 import {
-  register,
   verify,
   confirm,
   refreshAndSaveAccessToken,
@@ -108,7 +106,7 @@ export default component$(() => {
               label="Send code"
               styles="mt-8 w-full bg-primary"
             />
-            {sendAction.value?.failed && (
+            {sendAction.value?.message && (
               <p class="text-red-500 text-xs italic">
                 {sendAction.value?.message}
               </p>
