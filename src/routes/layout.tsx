@@ -5,13 +5,13 @@ import { decodeAccessToken } from "~/utils/auth";
 import { getAccessTokenFromCookie } from "~/utils/fetch";
 
 export const userAuthStateLoader = routeLoader$(
-  ({ cookie, cacheControl }) => {
+  ({ cookie, cacheControl, redirect, pathname }) => {
     const authState = getAccessTokenFromCookie(cookie);
     if (authState?.access_token) {
       const decodedToken = decodeAccessToken(authState?.access_token);
 
-      if (!decodedToken?.email_verified) {
-        // throw redirect(302, "/verify");
+      if (!decodedToken?.email_verified && !pathname.includes("/verify/")) {
+        throw redirect(302, "/verify");
       }
 
       return {

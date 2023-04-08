@@ -100,7 +100,8 @@ export const verify = async (
         endpoint: "/verify/email",
         method: "POST",
       },
-      baseUrl
+      baseUrl,
+      cookie
     );
     return data;
   } catch (e: any) {
@@ -110,6 +111,7 @@ export const verify = async (
 
 export const confirm = async (
   { code }: EmailConfirm,
+  cookie: Cookie,
   baseUrl: string
 ): Promise<JwtPayloadToUser | ErrorResponse> => {
   try {
@@ -121,7 +123,8 @@ export const confirm = async (
           code,
         },
       },
-      baseUrl
+      baseUrl,
+      cookie
     );
     return data;
   } catch (e: any) {
@@ -191,7 +194,7 @@ export async function refreshAndSaveAccessToken(
     );
 
     const tokenData: AuthState = responseData?.data;
-    cookie.set(AUTHTOKEN_NAME, tokenData, {
+    cookie.set(AUTHTOKEN_NAME, JSON.stringify(tokenData), {
       httpOnly: true,
       maxAge: [tokenData.expires_in as number, "seconds"],
       path: "/",

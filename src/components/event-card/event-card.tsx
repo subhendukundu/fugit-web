@@ -11,7 +11,7 @@ interface Props {
 
 export default component$(({ event, baseUrl }: Props) => {
   return (
-    <div class="rounded overflow-hidden border border-opacity-30 border-primary rounded-lg p-4">
+    <div class="flex flex-col h-full rounded overflow-hidden border border-opacity-30 border-primary rounded-lg p-4">
       <div class="flex justify-between">
         <h3 class="font-semibold text-secondary">{event.name}</h3>
         {/* <button>
@@ -22,7 +22,7 @@ export default component$(({ event, baseUrl }: Props) => {
           )}
         </button> */}
       </div>
-      <p class="text-xs mt-4">{event.formatted_address}</p>
+      <p class="text-xs mt-4 flex-1">{event.formatted_address}</p>
       <div class="flex-shrink-0 w-full h-64 mt-4">
         <img
           src={`${baseUrl}/photos/${event.photos}`}
