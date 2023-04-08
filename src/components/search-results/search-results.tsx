@@ -88,7 +88,7 @@ export default component$(
                 }}
               >
                 <>
-                  <span class="pr-2">Share Event</span>
+                  <span class="pr-2">Edit Event</span>
                   <svg
                     stroke="currentColor"
                     fill="none"
