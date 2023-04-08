@@ -15,7 +15,7 @@ interface Props {
   defaultOpen?: boolean;
   idea: Idea;
   places?: WeightedPlace[];
-  root?: boolean;
+  level?: number;
   results?: IdeaWithPlaces[];
   baseUrl: string;
   description?: string;
@@ -28,7 +28,7 @@ const Tree = component$((props: Props) => {
     defaultOpen = false,
     idea,
     places,
-    root,
+    level = 0,
     results = [],
     baseUrl,
     selectedEvent,
@@ -41,6 +41,8 @@ const Tree = component$((props: Props) => {
 
   const Icon = Icons[`${iconName}SquareO`];
 
+  console.log("level", level, more);
+
   return (
     <div>
       <div class="flex items-center mb-2">
@@ -48,9 +50,10 @@ const Tree = component$((props: Props) => {
           <LoadingCircle styles="fill-primary" />
         ) : (
           <button
-            class={`mr-4 cursor-pointer duration-300 transition-all ${
-              more ? "opacity-100" : "opacity-30"
+            class={`mr-4 duration-300 transition-all ${
+              more ? "opacity-100 cursor-pointer" : "opacity-30"
             }`}
+            disabled={!more}
             onClick$={async () => {
               if (searchResults.value.length) {
                 isOpen.value = !isOpen.value;
@@ -60,7 +63,7 @@ const Tree = component$((props: Props) => {
               isLoading.value = true;
               const result: any = await callApi(
                 {
-                  endpoint: `/search?q=${idea.activity_name}`,
+                  endpoint: `/search?q=${idea.activity_name} at ${idea.location}`,
                   method: "GET",
                 },
                 baseUrl
@@ -79,7 +82,7 @@ const Tree = component$((props: Props) => {
               ? "bg-primary bg-opacity-10 rounded-sm	"
               : ""
           }`}
-          disabled={root}
+          disabled={level === 0}
           onClick$={() => {
             if (
               !places?.[0] ||
@@ -95,7 +98,7 @@ const Tree = component$((props: Props) => {
         >
           <h2
             class={`text-sm font-semibold ${
-              root ? "text-tertiary" : "text-text"
+              level === 0 ? "text-tertiary" : "text-text"
             }`}
           >
             {idea?.activity_name}
@@ -106,8 +109,8 @@ const Tree = component$((props: Props) => {
         </button>
       </div>
       <div
-        class={`will-change-transform ml-2 pl-4 border-l border-dashed border-gray-700 overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-          isOpen.value ? "max-h-screen" : "max-h-0"
+        class={`will-change-transform ml-2 pl-4 border-l border-dashed border-gray-700 overflow-hidden ${
+          isOpen.value ? "max-h-full" : "max-h-0"
         }`}
       >
         <div key="content">
@@ -115,11 +118,12 @@ const Tree = component$((props: Props) => {
           {searchResults?.value?.map(({ idea, places }: any) => (
             <Tree
               key={idea.activity_name}
-              more
+              more={level + 1 < 2}
               idea={idea}
               places={places}
               baseUrl={baseUrl}
               selectedEvent={selectedEvent}
+              level={level + 1}
             />
           ))}
         </div>

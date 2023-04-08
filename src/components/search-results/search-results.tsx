@@ -38,8 +38,8 @@ export default component$(
     };
 
     return (
-      <div class="flex-1 mt-20 mb-20">
-        <div class="flex flex-wrap gap-x-10 md:gap-x-20 justify-start 4xl:justify-around">
+      <div class="mt-20 mb-20">
+        <div class="flex flex-col sm:flex-row flex-wrap gap-x-10 md:gap-x-20 justify-start 4xl:justify-around">
           <div class="flex-1 max-w-xl mb-8">
             <Tree
               more
@@ -49,7 +49,7 @@ export default component$(
                 short_description: "",
                 location: "",
               }}
-              root
+              level={0}
               results={results}
               baseUrl={baseUrl}
               selectedEvent={selectedEvent}

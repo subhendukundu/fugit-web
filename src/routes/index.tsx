@@ -94,11 +94,7 @@ export default component$(() => {
   return (
     <>
       {search.value ? (
-        search.value.failed ? (
-          <div class="bg-red-500 text-white p-2 mt-2">
-            Error: {search.value.failed}
-          </div>
-        ) : (
+        search?.value?.results ? (
           <SearchResults
             baseUrl={appDetails.value.baseUrl as string}
             action={event}
@@ -106,6 +102,10 @@ export default component$(() => {
             loggedIn={appDetails?.value?.loggedIn}
             title={search?.formData?.get("search") as string}
           />
+        ) : (
+          <div class="bg-red-500 text-white p-2 mt-2">
+            Unexpected error, please retry!
+          </div>
         )
       ) : (
         <Landing action={search} loading={search.isRunning} />
