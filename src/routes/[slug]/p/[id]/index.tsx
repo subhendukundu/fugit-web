@@ -107,7 +107,7 @@ export const useRequestDetails = routeLoader$(
           cookie
         );
 
-        if (!result?.message) {
+        if (!result?.error) {
           return result;
         }
         return null;
@@ -135,7 +135,10 @@ export const useOwnerRequestDetails = routeLoader$(
           baseUrl,
           cookie
         );
-        return result?.data;
+        if (!result?.error) {
+          return result?.data;
+        }
+        return null;
       } else {
         return null;
       }
@@ -282,7 +285,7 @@ export const head: DocumentHead = ({ resolveValue }) => {
         name: "description",
         content: previewData.event?.description,
       },
-      ...socialTags
+      ...socialTags,
     ],
   };
 };

@@ -17,7 +17,7 @@ export const useSearchAction = routeAction$(
         },
         baseUrl
       );
-      if (!result?.message) {
+      if (!result?.error) {
         return result;
       }
       return fail(403, {
