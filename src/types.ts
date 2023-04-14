@@ -1,3 +1,18 @@
+export interface JwtUser {
+  iss: string;
+  aud: string;
+  auth_time: number;
+  user_id: string;
+  exp: number;
+  iat: number;
+  email: string;
+  avatar?: string;
+  name: string;
+  email_verified: boolean;
+  session_id?: string;
+  sign_in_provider: string;
+}
+
 export interface Idea {
   activity_name: string;
   short_description: string;
@@ -29,6 +44,7 @@ export interface Event {
   photos?: string;
   created_at: string;
   updated_at: string;
+  is_draft?: boolean;
 }
 
 

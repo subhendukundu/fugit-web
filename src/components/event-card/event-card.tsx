@@ -6,10 +6,13 @@ import type { Event } from "~/types";
 interface Props {
   baseUrl: string;
   action?: any;
+  isPublished?: boolean;
+  own?: boolean;
   event: Event;
 }
 
-export default component$(({ event, baseUrl }: Props) => {
+export default component$(({ event, baseUrl, isPublished, own }: Props) => {
+  const url = `${isPublished ? "" : "/preview"}/${event?.slug}/p/${event?.id}`;
   return (
     <div class="flex flex-col h-full rounded overflow-hidden border border-opacity-30 border-primary rounded-lg p-4">
       <div class="flex justify-between">
@@ -21,6 +24,22 @@ export default component$(({ event, baseUrl }: Props) => {
             <BookmarkIcon styles="fill-primary" />
           )}
         </button> */}
+        {own && (
+          <div class="flex items-center">
+            <span
+              class={`text-sm font-medium mr-1 ${
+                isPublished ? "text-primary" : "text-quinary"
+              }`}
+            >
+              {isPublished ? "Live" : "Draft"}
+            </span>
+            <div
+              class={`rounded-full h-3 w-3 ${
+                isPublished ? "bg-primary" : "bg-quinary"
+              }`}
+            ></div>
+          </div>
+        )}
       </div>
       <p class="text-xs mt-4 flex-1">{event.formatted_address}</p>
       <div class="flex-shrink-0 w-full h-64 mt-4">
@@ -43,7 +62,7 @@ export default component$(({ event, baseUrl }: Props) => {
           </div>
         </div>
         <Link
-          href={`/${event?.slug}/p/${event?.id}`}
+          href={url}
           class="py-1 px-4 text-primary hover:text-white bg-transparent border border-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
         >
           Explore

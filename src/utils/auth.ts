@@ -3,6 +3,7 @@ import jsonwebtoken from "@tsndr/cloudflare-worker-jwt";
 import type { AuthState, ErrorResponse } from "./fetch";
 import { getAccessTokenFromCookie } from "./fetch";
 import { callApi } from "./fetch";
+import type { JwtUser } from "~/types";
 
 export const AUTHTOKEN_NAME: string = "fugit.app:user";
 
@@ -10,9 +11,9 @@ export const isUserAuthenticated = async (cookie: Cookie) => {
   return cookie.has(AUTHTOKEN_NAME);
 };
 
-export function decodeAccessToken(token: string) {
+export function decodeAccessToken(token: string): JwtUser {
   const { payload } = jsonwebtoken.decode(token);
-  return payload;
+  return payload as JwtUser;
 }
 
 interface EmailAuth {

@@ -1,7 +1,7 @@
 import { component$, Slot } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
+import { routeAction$, routeLoader$ } from "@builder.io/qwik-city";
 import Header from "~/components/header/header";
-import { decodeAccessToken } from "~/utils/auth";
+import { decodeAccessToken, signOut } from "~/utils/auth";
 import { getAccessTokenFromCookie } from "~/utils/fetch";
 
 export const userAuthStateLoader = routeLoader$(
@@ -17,6 +17,8 @@ export const userAuthStateLoader = routeLoader$(
       return {
         loggedIn: true,
         accessToken: authState?.access_token,
+        userName: decodedToken?.name,
+        email: decodedToken?.email,
       };
     }
 
@@ -31,14 +33,32 @@ export const userAuthStateLoader = routeLoader$(
   }
 );
 
+export const useLogoutAction = routeAction$(
+  async (data, { cookie, redirect, fail }) => {
+    try {
+      console.log("cool");
+      await signOut(cookie);
+      throw redirect(302, "/login");
+    } catch (e) {
+      return fail(403, {
+        message: "Unexpected error, please retry!",
+      });
+    }
+  }
+);
+
 export default component$(() => {
   const authState = userAuthStateLoader();
+  const logoutAction = useLogoutAction();
 
   return (
     <main class="flex flex-col min-h-screen container mx-auto px-4" role="main">
       <Header
         isLoggedIn={authState.value?.loggedIn}
         key={authState.value?.accessToken}
+        userName={authState.value?.userName as string}
+        email={authState.value?.email as string}
+        logoutAction={logoutAction}
       />
       <div class="flex-1">
         <Slot />

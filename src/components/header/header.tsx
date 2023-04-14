@@ -1,6 +1,8 @@
 import { component$, Slot } from "@builder.io/qwik";
+import type { ActionStore, FailReturn } from "@builder.io/qwik-city";
 import { Link, useLocation } from "@builder.io/qwik-city";
 import { FugitIcon } from "../icons/logo";
+import UserDropdown from "../user-dropdown/user-dropdown";
 
 export const NavLink = component$(({ href, isActive }: any) => {
   return (
@@ -8,8 +10,8 @@ export const NavLink = component$(({ href, isActive }: any) => {
       href={href}
       class={
         isActive
-          ? "text-primary active dark:text-primary sm:mr-8 mr-4"
-          : "transition hover:text-primary dark:hover:text-light sm:mr-8 mr-4"
+          ? "text-primary active sm:mr-8 mr-4"
+          : "transition hover:text-primary sm:mr-8 mr-4"
       }
     >
       <Slot />
@@ -30,38 +32,56 @@ export const navigation = [
 
 interface Props {
   isLoggedIn: boolean;
+  userName: string;
+  email: string;
+  logoutAction: ActionStore<
+    FailReturn<{ message: string }>,
+    Record<string, any>,
+    true
+  >;
 }
 
-export default component$(({ isLoggedIn }: Props) => {
-  const loc = useLocation();
-  const { url } = loc;
-  const { pathname } = url;
-  return (
-    <header class="flex items-center justify-between p-4 container mx-auto px-4">
-      <Link href="/">
-        <div class="flex items-center">
-          <FugitIcon styles="w-24" />
-        </div>
-      </Link>
-      <nav class="flex items-center">
-        <div class="flex text-sm font-medium">
-          {navigation.map((nav) => (
-            <NavLink
-              href={nav.href}
-              key={nav.href}
-              isActive={pathname === nav.href}
-            >
-              {nav.name}
-            </NavLink>
-          ))}
-        </div>
-        <Link
-          class="group flex items-center rounded-full bg-zinc-800/90 px-4 py-2 text-xs font-medium text-zinc-50 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur whitespace-nowrap transition hover:bg-zinc-600 dark:bg-zinc-100 dark:text-zinc-800 dark:ring-white/10 dark:hover:bg-zinc-200 sm:text-sm"
-          href={isLoggedIn ? "/logout" : "/login"}
-        >
-          {isLoggedIn ? "Logout" : "Login"}
+export default component$(
+  ({ isLoggedIn, logoutAction, userName, email }: Props) => {
+    const loc = useLocation();
+    const { url } = loc;
+    const { pathname } = url;
+    return (
+      <header class="flex items-center justify-between p-4 container mx-auto px-4">
+        <Link href="/">
+          <div class="flex items-center">
+            <FugitIcon styles="w-24" />
+          </div>
         </Link>
-      </nav>
-    </header>
-  );
-});
+        <nav class="flex items-center" key={pathname}>
+          <div class="flex text-sm font-medium">
+            {navigation.map((nav) => (
+              <NavLink
+                href={nav.href}
+                key={nav.href}
+                isActive={pathname === nav.href}
+              >
+                {nav.name}
+              </NavLink>
+            ))}
+          </div>
+          {isLoggedIn ? (
+            <UserDropdown
+              options={[{ label: "Own Events", href: "/explore/own" }]}
+              logoutAction={logoutAction}
+              userName={userName}
+              email={email}
+            />
+          ) : (
+            <Link
+              class="text-text block px-4 py-2 text-sm font-medium hover:bg-primary hover:bg-opacity-10"
+              href="/login"
+            >
+              Login
+            </Link>
+          )}
+        </nav>
+      </header>
+    );
+  }
+);
