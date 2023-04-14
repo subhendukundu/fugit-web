@@ -2,13 +2,13 @@ import { component$, Resource } from "@builder.io/qwik";
 import type { RequestedEvent } from "~/types";
 
 interface Props {
-  action: any;
+  loader: any;
 }
 
-export default component$(({ action }: Props) => {
+export default component$(({ loader }: Props) => {
   return (
     <Resource
-      value={action}
+      value={loader}
       onPending={() => <div>Loading...</div>}
       onRejected={() => <div>Failed to load event details</div>}
       onResolved={(request: RequestedEvent | null) => {

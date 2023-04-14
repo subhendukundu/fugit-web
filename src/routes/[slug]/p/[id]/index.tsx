@@ -107,7 +107,7 @@ export const useRequestDetails = routeLoader$(
           cookie
         );
 
-        if (!result?.error) {
+        if (!result?.message) {
           return result;
         }
         return null;
@@ -225,13 +225,13 @@ export default component$(() => {
           <div class="flex justify-between max-w-sm mb-8">
             {isOwner && (
               <EventOwnerActions
-                action={ownerResquests}
+                loader={ownerResquests}
                 statusAction={changeStatus}
               />
             )}
             {loggedInUserId && !showChat && (
               <Form action={eventRequestPost}>
-                <EventRequestActions action={eventRequest} />
+                <EventRequestActions loader={eventRequest} />
               </Form>
             )}
             {!loggedInUserId && (
@@ -263,11 +263,7 @@ export default component$(() => {
           />
           <div class={showChat ? "block" : "hidden"}>
             {baseWssUrl && (
-              <Chat
-                baseWssUrl="ws://127.0.0.1:8787/api/v1"
-                name={userName}
-                token={token}
-              />
+              <Chat baseWssUrl={baseWssUrl} name={userName} token={token} />
             )}
           </div>
         </div>

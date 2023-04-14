@@ -2,16 +2,17 @@ import { component$, Resource } from "@builder.io/qwik";
 import { parseISO, formatDistanceToNow } from "date-fns";
 import type { UserRequest } from "~/types";
 import { Ghost } from "../icons/ghost";
+import { showNotification } from "~/utils/notification";
 
 interface Props {
-  action: any;
+  loader: any;
   statusAction: any;
 }
 
-export default component$(({ action, statusAction }: Props) => {
+export default component$(({ loader, statusAction }: Props) => {
   return (
     <Resource
-      value={action}
+      value={loader}
       onPending={() => <div>Loading...</div>}
       onRejected={() => <div>Failed to load event details</div>}
       onResolved={(request: UserRequest[] = []) => {
@@ -83,7 +84,7 @@ export default component$(({ action, statusAction }: Props) => {
                       <div class="relative">
                         <select
                           onChange$={(e) =>
-                            statusAction.run({
+                            statusAction.submit({
                               status: e.target.value,
                               user_id: item.id,
                             })
@@ -139,6 +140,12 @@ export default component$(({ action, statusAction }: Props) => {
             <button
               type="submit"
               class="mt-8 py-2 px-8 text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
+              onClick$={async () => {
+                showNotification(
+                  "Cancelling events not available at the moment!",
+                  "error"
+                );
+              }}
             >
               Cancel Event
             </button>
