@@ -30,7 +30,6 @@ export const useOwnEventDetails = routeLoader$(async ({ env, cookie }) => {
       baseUrl,
       cookie
     );
-    console.log("result", result);
     return result?.data || [];
   } catch (e) {
     console.log(e);
@@ -48,7 +47,6 @@ export default component$(() => {
       onPending={() => <Loader />}
       onRejected={() => <div>Failed to fetch Events</div>}
       onResolved={(data: any) => {
-        console.log("data", data);
         return data?.length ? (
           <div class="flex-1 mt-20 mb-20">
             <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
@@ -65,7 +63,7 @@ export default component$(() => {
             </div>
           </div>
         ) : (
-          <div class="flex flex-col sm:flex-row justify-center items-center">
+          <div class="flex flex-col sm:flex-row justify-center items-center mt-20 md:mt-8">
             <div class="mr-32">
               <h2 class="text-md font-semibold text-text mb-8">
                 Join our community and create your first event today!

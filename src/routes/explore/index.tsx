@@ -130,7 +130,7 @@ export default component$(() => {
             </div>
           </div>
         ) : (
-          <div class="flex justify-center items-center">
+          <div class="flex justify-center items-center mt-20 md:mt-8">
             <div class="mr-32">
               <h2 class="text-md font-semibold text-text mb-8">
                 Join our community and create your first event today!

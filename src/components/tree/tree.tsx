@@ -1,5 +1,5 @@
 import type { Signal } from "@builder.io/qwik";
-import { Slot, component$, useSignal } from "@builder.io/qwik";
+import { Slot, component$, useSignal, $ } from "@builder.io/qwik";
 import * as Icons from "../icons/search-result-icons";
 import type {
   Idea,
@@ -9,6 +9,7 @@ import type {
 } from "~/types";
 import { callApi } from "~/utils/fetch";
 import LoadingCircle from "../loading-circle/loading-circle";
+import TreeShimmer from "../tree-shimmer/tree-shimmer";
 
 interface Props {
   more?: boolean;
@@ -35,13 +36,38 @@ const Tree = component$((props: Props) => {
   } = props;
 
   const isOpen = useSignal(defaultOpen);
-  const isLoading = useSignal(false);
+  const isLoading = useSignal<boolean>(false);
+  const error = useSignal<string>();
   const searchResults = useSignal<IdeaWithPlaces[]>(results);
   const iconName = more ? (isOpen.value ? "Minus" : "Plus") : "Close";
 
   const Icon = Icons[`${iconName}SquareO`];
 
-  console.log("level", level, more);
+  const loadMoreIdeas = $(async () => {
+    if (!more) {
+      return void 0;
+    }
+    if (searchResults.value.length) {
+      isOpen.value = !isOpen.value;
+      return void 0;
+    }
+    error.value = "";
+    isLoading.value = true;
+    const result: any = await callApi(
+      {
+        endpoint: `/search?q=${idea.activity_name} at ${idea.location}`,
+        method: "GET",
+      },
+      baseUrl
+    );
+    if (result?.results) {
+      searchResults.value = result?.results;
+    } else {
+      error.value = "An error occurred while generating ideas!";
+    }
+    isOpen.value = !isOpen.value;
+    isLoading.value = false;
+  });
 
   return (
     <div>
@@ -54,24 +80,7 @@ const Tree = component$((props: Props) => {
               more ? "opacity-100 cursor-pointer" : "opacity-30"
             }`}
             disabled={!more}
-            onClick$={async () => {
-              if (searchResults.value.length) {
-                isOpen.value = !isOpen.value;
-                return void 0;
-              }
-
-              isLoading.value = true;
-              const result: any = await callApi(
-                {
-                  endpoint: `/search?q=${idea.activity_name} at ${idea.location}`,
-                  method: "GET",
-                },
-                baseUrl
-              );
-              isOpen.value = !isOpen.value;
-              isLoading.value = false;
-              searchResults.value = result?.results;
-            }}
+            onClick$={loadMoreIdeas}
           >
             <Icon class="w-4 h-4" />
           </button>
@@ -108,6 +117,18 @@ const Tree = component$((props: Props) => {
           )}
         </button>
       </div>
+      {isLoading.value && <TreeShimmer count={3} />}
+      {error.value && (
+        <div class="ml-2 pl-4 border-l border-dashed border-gray-700">
+          <p class="text-red-500 text-xs italic mb-2">{error.value}</p>
+          <button
+            class="py-1 px-4 bg-transparent border border-primary text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
+            onClick$={loadMoreIdeas}
+          >
+            Retry
+          </button>
+        </div>
+      )}
       <div
         class={`will-change-transform ml-2 pl-4 border-l border-dashed border-gray-700 overflow-hidden ${
           isOpen.value ? "max-h-full" : "max-h-0"

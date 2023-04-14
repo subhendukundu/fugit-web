@@ -51,8 +51,6 @@ export default component$(() => {
   const confirmEmail = useConfirmCodeAction();
   const sendAction = useSendCodeAction();
 
-  console.log("sendAction.value", sendAction.value);
-
   return (
     <>
       <div class="flex flex-1 flex-col lg:flex-row">
