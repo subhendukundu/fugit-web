@@ -50,9 +50,10 @@ export const signIn = async (
         maxAge: [data.expires_in, "seconds"],
         path: "/",
       });
+      return data;
     }
 
-    return data;
+    throw new Error(data?.message);
   } catch (e: any) {
     return e;
   }
@@ -83,9 +84,10 @@ export const register = async (
         maxAge: [data.expires_in, "seconds"],
         path: "/",
       });
+      return data;
     }
 
-    return data;
+    throw new Error(data?.message);
   } catch (e: any) {
     return e;
   }

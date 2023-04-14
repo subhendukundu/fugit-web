@@ -36,7 +36,6 @@ export const userAuthStateLoader = routeLoader$(
 export const useLogoutAction = routeAction$(
   async (data, { cookie, redirect, fail }) => {
     try {
-      console.log("cool");
       await signOut(cookie);
       throw redirect(302, "/login");
     } catch (e) {

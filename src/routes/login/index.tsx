@@ -12,7 +12,6 @@ export const useSigninAction = routeAction$(
     try {
       const baseUrl = env.get("VITE_API_URL") as string;
       const result = await signIn(data, cookie, baseUrl);
-
       if (result instanceof Error) {
         return fail(403, {
           message: "Invalid username or password",
@@ -127,6 +126,6 @@ export const head: DocumentHead = {
       content:
         "Fugit, login, sign in, social app, tribe, adventure, explore, connect, meet, like-minded",
     },
-    ...socialTags
+    ...socialTags,
   ],
 };
