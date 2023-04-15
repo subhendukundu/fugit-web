@@ -1,6 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import type { Event } from "~/types";
+import { getTimeDifference } from "~/utils/string";
 // import { BookmarkedIcon, BookmarkIcon } from "../icons/socials";
 
 interface Props {
@@ -58,7 +59,9 @@ export default component$(({ event, baseUrl, isPublished, own }: Props) => {
             </span>
           </div>
           <div>
-            <span class="text-sm text-gray-600">Closing soon!</span>
+            <span class="text-sm text-gray-600">
+              {getTimeDifference(event?.end_date as string)}
+            </span>
           </div>
         </div>
         <Link

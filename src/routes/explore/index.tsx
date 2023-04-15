@@ -4,7 +4,7 @@ import {
   useResource$,
   useSignal,
 } from "@builder.io/qwik";
-import type { DocumentHead} from "@builder.io/qwik-city";
+import type { DocumentHead } from "@builder.io/qwik-city";
 import { Link } from "@builder.io/qwik-city";
 import { routeAction$, z, zod$ } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
@@ -91,7 +91,7 @@ export default component$(() => {
       onPending={() => <Loader />}
       onRejected={() => <div>Failed to fetch Events</div>}
       onResolved={(data: any) => {
-        return data?.length ? (
+        return (
           <div class="flex-1 mt-20 mb-20">
             <form
               class="flex justify-center items-center flex-col sm:flex-row"
@@ -117,32 +117,34 @@ export default component$(() => {
                 Search
               </button>
             </form>
-            <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-              {data?.map((event: Event) => (
-                <div class="mt-16" key={event.place_id}>
-                  <EventCard
-                    event={event}
-                    baseUrl={baseUrl.value.baseUrl as string}
-                    isPublished
-                  />
+            {data?.length ? (
+              <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
+                {data?.map((event: Event) => (
+                  <div class="mt-16" key={event.place_id}>
+                    <EventCard
+                      event={event}
+                      baseUrl={baseUrl.value.baseUrl as string}
+                      isPublished
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div class="flex justify-center items-center mt-8 md:mt-16">
+                <div class="mr-32">
+                  <h2 class="text-md font-semibold text-text mb-8">
+                    Join our community and create your first event today!
+                  </h2>
+                  <Link
+                    href="/"
+                    class="py-2 px-8 bg-transparent border border-primary text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
+                  >
+                    Create
+                  </Link>
                 </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div class="flex justify-center items-center mt-20 md:mt-8">
-            <div class="mr-32">
-              <h2 class="text-md font-semibold text-text mb-8">
-                Join our community and create your first event today!
-              </h2>
-              <Link
-                href="/"
-                class="py-2 px-8 bg-transparent border border-primary text-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
-              >
-                Create
-              </Link>
-            </div>
-            <NotFoundIcon />
+                <NotFoundIcon />
+              </div>
+            )}
           </div>
         );
       }}
