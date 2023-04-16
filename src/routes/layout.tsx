@@ -55,8 +55,8 @@ export default component$(() => {
     <main class="flex flex-col min-h-screen container mx-auto px-4" role="main">
       {location.isNavigating && (
         <div class="container">
-          <div class="h-1 w-full overflow-hidden bg-blue-200">
-            <div class="h-full w-full bg-blue-500 origin-left animate-indeterminate"></div>
+          <div class="h-2 w-full overflow-hidden bg-primary bg-opacity-20 rounded-full">
+            <div class="h-full w-full bg-primary origin-left animate-indeterminate rounded-full"></div>
           </div>
         </div>
       )}
