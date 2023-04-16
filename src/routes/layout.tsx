@@ -1,5 +1,5 @@
 import { component$, Slot } from "@builder.io/qwik";
-import { routeAction$, routeLoader$ } from "@builder.io/qwik-city";
+import { routeAction$, routeLoader$, useLocation } from "@builder.io/qwik-city";
 import Header from "~/components/header/header";
 import { decodeAccessToken, signOut } from "~/utils/auth";
 import { getAccessTokenFromCookie } from "~/utils/fetch";
@@ -49,9 +49,17 @@ export const useLogoutAction = routeAction$(
 export default component$(() => {
   const authState = userAuthStateLoader();
   const logoutAction = useLogoutAction();
+  const location = useLocation();
 
   return (
     <main class="flex flex-col min-h-screen container mx-auto px-4" role="main">
+      {location.isNavigating && (
+        <div class="container">
+          <div class="h-1 w-full overflow-hidden bg-blue-200">
+            <div class="h-full w-full bg-blue-500 origin-left animate-indeterminate"></div>
+          </div>
+        </div>
+      )}
       <Header
         isLoggedIn={authState.value?.loggedIn}
         key={authState.value?.accessToken}
