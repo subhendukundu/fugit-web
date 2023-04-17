@@ -3,9 +3,7 @@ import { Slot, component$, useSignal, $ } from "@builder.io/qwik";
 import * as Icons from "../icons/search-result-icons";
 import type {
   Idea,
-  IdeaWithPlace,
   IdeaWithPlaces,
-  WeightedPlace,
 } from "~/types";
 import { callApi } from "~/utils/fetch";
 import LoadingCircle from "../loading-circle/loading-circle";
@@ -15,12 +13,11 @@ interface Props {
   more?: boolean;
   defaultOpen?: boolean;
   idea: Idea;
-  places?: WeightedPlace[];
   level?: number;
   results?: IdeaWithPlaces[];
   baseUrl: string;
   description?: string;
-  selectedEvent: Signal<IdeaWithPlace | undefined>;
+  selectedIdea: Signal<Idea | undefined>;
 }
 
 const Tree = component$((props: Props) => {
@@ -28,11 +25,10 @@ const Tree = component$((props: Props) => {
     more,
     defaultOpen = false,
     idea,
-    places,
     level = 0,
     results = [],
     baseUrl,
-    selectedEvent,
+    selectedIdea,
   } = props;
 
   const isOpen = useSignal(defaultOpen);
@@ -87,22 +83,19 @@ const Tree = component$((props: Props) => {
         )}
         <button
           class={`text-left p-2 ${
-            selectedEvent.value?.idea.activity_name === idea.activity_name
+            selectedIdea.value?.activity_name === idea.activity_name
               ? "bg-primary bg-opacity-10 rounded-sm	"
               : ""
           }`}
           disabled={level === 0}
           onClick$={() => {
             if (
-              !places?.[0] ||
-              selectedEvent.value?.idea.activity_name === idea.activity_name
+              selectedIdea.value?.activity_name === idea.activity_name
             ) {
               return void 0;
             }
-            selectedEvent.value = {
-              idea,
-              place: places?.[0],
-            };
+            selectedIdea.value = 
+              idea;
           }}
         >
           <h2
@@ -136,14 +129,13 @@ const Tree = component$((props: Props) => {
       >
         <div key="content">
           <Slot />
-          {searchResults?.value?.map(({ idea, places }: any) => (
+          {searchResults?.value?.map(({ idea }: any) => (
             <Tree
               key={idea.activity_name}
               more={level + 1 < 2}
               idea={idea}
-              places={places}
               baseUrl={baseUrl}
-              selectedEvent={selectedEvent}
+              selectedIdea={selectedIdea}
               level={level + 1}
             />
           ))}

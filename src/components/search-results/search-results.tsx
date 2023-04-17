@@ -1,10 +1,11 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import type { IdeaWithPlaces, IdeaWithPlace } from "~/types";
+import type { IdeaWithPlaces, Idea, WeightedPlace } from "~/types";
 import { showNotification } from "~/utils/notification";
 import { toUrlFriendly } from "~/utils/string";
 import Button from "../button/button";
 import Tree from "../tree/tree";
 import EventDetails from "../event-details/event-details";
+import StarRating from "../star-rating/star-rating";
 
 interface Props {
   baseUrl: string;
@@ -16,29 +17,30 @@ interface Props {
 
 export default component$(
   ({ baseUrl, action, results, loggedIn, title }: Props) => {
-    const selectedEvent = useSignal<IdeaWithPlace>({
-      idea: results?.[0]?.idea,
-      place: results?.[0]?.places?.[0],
-    });
+    const selectedIdea = useSignal<Idea>(results?.[0]?.idea);
+    const selectedPlace = useSignal<WeightedPlace>();
+    const placesForSelectedIdea = results.find(
+      (item) => item?.idea?.activity_name === selectedIdea.value?.activity_name
+    );
 
     const eventData = {
-      name: selectedEvent.value?.idea?.activity_name,
-      description: selectedEvent.value?.idea?.short_description,
-      area_name: selectedEvent.value?.idea?.location,
-      location_name: selectedEvent?.value?.place?.name,
-      formatted_address: selectedEvent?.value?.place?.formatted_address,
-      place_id: selectedEvent?.value?.place?.place_id,
-      rating: selectedEvent?.value?.place?.rating,
-      user_ratings_total: selectedEvent?.value?.place?.user_ratings_total,
-      photos: selectedEvent?.value?.place?.photos,
-      geometry: selectedEvent?.value?.place?.geometry?.location,
+      name: selectedIdea.value?.activity_name,
+      description: selectedIdea.value?.short_description,
+      area_name: selectedIdea.value?.location,
+      location_name: selectedPlace?.value?.name,
+      formatted_address: selectedPlace?.value?.formatted_address,
+      place_id: selectedPlace?.value?.place_id,
+      rating: selectedPlace?.value?.rating,
+      user_ratings_total: selectedPlace?.value?.user_ratings_total,
+      photos: selectedPlace?.value?.photos,
+      geometry: selectedPlace?.value?.geometry?.location,
       slug: toUrlFriendly(
-        `${selectedEvent.value?.idea?.activity_name} ${selectedEvent.value?.idea?.location}`
+        `${selectedIdea.value?.activity_name} ${selectedIdea.value?.location}`
       ),
     };
 
     return (
-      <div class="mt-20 mb-20">
+      <div class="mb-20">
         <div class="flex flex-col sm:flex-row flex-wrap gap-x-10 md:gap-x-20 justify-start 4xl:justify-around">
           <div class="flex-1 max-w-xl mb-8">
             <Tree
@@ -52,7 +54,7 @@ export default component$(
               level={0}
               results={results}
               baseUrl={baseUrl}
-              selectedEvent={selectedEvent}
+              selectedIdea={selectedIdea}
             />
           </div>
           <div class="flex-1 max-w-xl mb-8">
@@ -62,15 +64,59 @@ export default component$(
               description={eventData.description}
               startDate={new Date().toISOString().slice(0, 10)}
               endDate={new Date().toISOString().slice(0, 10)}
-              locationName={eventData?.location_name}
-              formattedAddress={eventData?.formatted_address}
-              placeId={eventData?.place_id}
-              hostOwner="User Name"
+              hostOwner="Your Name"
               totalSeats={2}
               bookedSeats={0}
+              searching
             />
+            <h2 class="text-md font-semibold text-text mt-8">
+              Places to pick from
+            </h2>
+            {placesForSelectedIdea?.places?.map((place) => (
+              <div class="flex items-center mb-4" key={place.place_id}>
+                <input
+                  id={place.place_id}
+                  type="radio"
+                  value={place.place_id}
+                  name="place_id"
+                  class="peer w-6 h-6 text-primary accent-primary bg-gray-100 border-gray-300 focus:ring-primary focus:ring-2 cursor-pointer"
+                  onChange$={() => {
+                    selectedPlace.value = place;
+                  }}
+                />
+                <label
+                  for={place.place_id}
+                  class="ml-4 text-sm font-medium text-text cursor-pointer flex flex-1 peer-checked:border-primary border-2 rounded-lg p-4"
+                >
+                  <div class="mr-4 flex-1">
+                    <span>{place.name}</span>
+                    <p class="text-xs font-normal mb-2">
+                      {place.formatted_address}
+                    </p>
+                    <StarRating rating={place.rating} />
+                    <div class="mt-4">
+                      <a
+                        href={place.location_link}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="text-sm hover:bg-opacity-75 space-x-2"
+                      >
+                        view on map
+                      </a>
+                    </div>
+                  </div>
+                  <div class="flex-shrink-0 h-32 w-32 mr-4">
+                    <img
+                      src={`${baseUrl}/photos/${place.photos}`}
+                      alt={place.name}
+                      class="h-full w-full object-cover rounded-lg"
+                    />
+                  </div>
+                </label>
+              </div>
+            ))}
           </div>
-          {selectedEvent?.value?.place?.place_id && (
+          {selectedIdea?.value?.activity_name && (
             <div class="fixed bottom-10 right-14 z-1">
               <Button
                 isRunning={action.isRunning}
@@ -78,6 +124,7 @@ export default component$(
                 styles="flex items-center py-2 px-8 text-white font-medium bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
                 onClick$={async () => {
                   if (loggedIn) {
+                    console.log("selectedIdeaWithPlace", eventData);
                     await action.submit(eventData);
                   } else {
                     showNotification(

@@ -10,11 +10,12 @@ interface Props {
   endDate: string;
   totalSeats: number;
   bookedSeats: number;
-  locationName: string;
-  formattedAddress: string;
-  placeId: string;
+  locationName?: string;
+  formattedAddress?: string;
+  placeId?: string;
   avatarUrl?: string;
   hostOwner: string;
+  searching?: boolean;
 }
 
 export default component$((props: Props) => {
@@ -30,6 +31,7 @@ export default component$((props: Props) => {
     placeId,
     avatarUrl,
     hostOwner,
+    searching,
   } = props;
   return (
     <>
@@ -43,19 +45,24 @@ export default component$((props: Props) => {
           left: bookedSeats,
         }}
       />
-      <div class="mt-8">
-        <h2 class="text-md font-semibold text-text">Location</h2>
-        <div class="text-sm mt-3">{locationName}</div>
-        <div class="text-xs mt-1">{formattedAddress}</div>
-        <a
-          href={getGoogleMapsUrl(formattedAddress, placeId)}
-          target="_blank"
-          rel="noreferrer"
-          class="text-sm text-primary hover:bg-opacity-75 space-x-2 mt-2"
-        >
-          view on map
-        </a>
-      </div>
+      {!searching && (
+        <div class="mt-8">
+          <h2 class="text-md font-semibold text-text">Location</h2>
+          <div class="text-sm mt-3">{locationName}</div>
+          <div class="text-xs mt-1">{formattedAddress}</div>
+          <a
+            href={getGoogleMapsUrl(
+              formattedAddress as string,
+              placeId as string
+            )}
+            target="_blank"
+            rel="noreferrer"
+            class="text-sm text-primary hover:bg-opacity-75 space-x-2 mt-2"
+          >
+            view on map
+          </a>
+        </div>
+      )}
       <div class="my-8">
         <h2 class="text-md font-semibold text-text mt-8">Host Details</h2>
         <div class="flex items-center mt-3">

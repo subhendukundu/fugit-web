@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useSignal, useTask$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { zod$, z, routeLoader$, routeAction$ } from "@builder.io/qwik-city";
 import Landing from "~/components/landing/landing";
@@ -88,27 +88,68 @@ export const useAppDetails = routeLoader$(({ env, cookie }) => {
 
 export default component$(() => {
   const search = useSearchAction();
+  const searchedText = search?.formData?.get("search") as string;
+  const reset = useSignal<boolean>(!searchedText);
   const appDetails = useAppDetails();
   const event = useCreateEventAction();
 
+  useTask$(({ track }) => {
+    track(() => search?.isRunning);
+    if (!search?.isRunning) {
+      reset.value = false;
+    }
+  });
+
   return (
     <>
-      {search.value ? (
-        search?.value?.results ? (
-          <SearchResults
-            baseUrl={appDetails.value.baseUrl as string}
-            action={event}
-            results={search?.value?.results}
-            loggedIn={appDetails?.value?.loggedIn}
-            title={search?.formData?.get("search") as string}
-          />
-        ) : (
-          <div class="bg-red-500 text-white p-2 mt-2">
-            Unexpected error, please retry!
-          </div>
-        )
-      ) : (
+      {!search.value || reset.value ? (
         <Landing action={search} loading={search.isRunning} />
+      ) : (
+        <>
+          <button
+            type="button"
+            class="mb-8 mt-12 text-text border border-opacity-30 border-primary hover:bg-primary hover:text-white focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2"
+            onClick$={() => (reset.value = true)}
+          >
+            <svg
+              stroke="currentColor"
+              fill="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M21 11H6.414l5.293-5.293-1.414-1.414L2.586 12l7.707 7.707 1.414-1.414L6.414 13H21z"></path>
+            </svg>
+            <span class="sr-only">Icon description</span>
+          </button>
+          {search?.value?.results ? (
+            <SearchResults
+              baseUrl={appDetails.value.baseUrl as string}
+              action={event}
+              results={search?.value?.results}
+              loggedIn={appDetails?.value?.loggedIn}
+              title={searchedText}
+            />
+          ) : (
+            <>
+              <div class="bg-red-500 text-white p-2 mt-2">
+                Unexpected error, please retry!
+              </div>
+              <button
+                onClick$={() =>
+                  search.submit({
+                    search: searchedText,
+                  })
+                }
+                class="mt-8 py-2 px-8 text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-dark"
+              >
+                Retry
+              </button>
+            </>
+          )}
+        </>
       )}
     </>
   );
