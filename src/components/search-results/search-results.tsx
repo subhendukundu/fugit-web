@@ -69,7 +69,7 @@ export default component$(
               bookedSeats={0}
               searching
             />
-            <h2 class="text-md font-semibold text-text mt-8">
+            <h2 class="text-md font-semibold text-text mt-8 mb-4">
               Places to pick from
             </h2>
             {placesForSelectedIdea?.places?.map((place) => (
