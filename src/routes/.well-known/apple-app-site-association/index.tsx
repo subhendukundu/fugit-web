@@ -8,7 +8,7 @@ export const onGet: RequestHandler = async ({ json, headers }) => {
       details: {
         appIDs: ["F5SZLQKVH8.io.higgle.fugitapp"],
         appID: "F5SZLQKVH8.io.higgle.fugitapp",
-        paths: ["/*"],
+        paths: ["*"],
       },
     },
     webcredentials: {
