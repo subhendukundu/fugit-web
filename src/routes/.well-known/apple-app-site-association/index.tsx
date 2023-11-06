@@ -1,14 +1,12 @@
 import { type RequestHandler } from "@builder.io/qwik-city";
 
-export const onGet: RequestHandler = async ({ json, headers }) => {
-  headers.set("Content-Type", "application/json");
+export const onGet: RequestHandler = async ({ json }) => {
   json(200, {
     applinks: {
-      apps: [],
       details: [
         {
-          appID: "F5SZLQKVH8.io.higgle.fugitapp",
-          paths: ["*"],
+          components: [{ "/": "/*" }],
+          appIDs: ["F5SZLQKVH8.io.higgle.fugitapp"],
         },
       ],
     },
