@@ -1,16 +1,10 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import Footer from "~/components/footer/footer";
 import Landing from "~/components/landing/landing";
 import { socialTags } from "~/config/social-tags";
 
 export default component$(() => {
-  return (
-    <div class="flex flex-col justify-between min-h-screen">
-      <Landing />
-      <Footer />
-    </div>
-  );
+  return <Landing />;
 });
 
 export const head: DocumentHead = {

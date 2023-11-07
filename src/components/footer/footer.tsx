@@ -22,6 +22,11 @@ export default component$(() => {
               Terms & Conditions
             </a>
           </li>
+          <li>
+            <a href="/privacy-policy" class="mr-4 hover:underline md:mr-6">
+              Privacy Policy
+            </a>
+          </li>
         </ul>
       </div>
     </footer>
