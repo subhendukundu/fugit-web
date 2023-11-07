@@ -1,4 +1,12 @@
 /**
+ * Tailwind CSS imports
+ * View the full documentation at https://tailwindcss.com
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
  * WHAT IS THIS FILE?
  *
  * Globally applied styles. No matter which components are in the page or matching route,
@@ -40,9 +48,15 @@ html {
 }
 
 body {
-  padding: 0;
-  margin: 0;
-  line-height: inherit;
+  overflow-x: hidden;
+  margin: 0 20px;
+  padding: 0 20px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+main {
+  min-height: 100vh;
 }
 
 /**

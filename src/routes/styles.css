@@ -16,13 +16,6 @@ html {
     "Noto Color Emoji";
 }
 
-body {
-  overflow-x: hidden;
-  margin: 20px;
-  padding: 20px;
-  line-height: 1.6;
-}
-
 h1.title {
   text-align: center;
   color: #333;
