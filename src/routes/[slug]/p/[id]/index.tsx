@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
-import { Link } from "@builder.io/qwik-city";
+// import { Link } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import EventDetails from "~/components/event-details/event-details";
 import { socialTags } from "~/config/social-tags";
@@ -14,7 +14,15 @@ export const usePreviewDataLoader = routeLoader$(async (req) => {
   const db = tursoClient(req);
   const eventResponse = await db.execute({
         sql: `SELECT 
-        e.*,
+        e.title AS title,
+        e.description AS description,
+        e.featured_photo AS featured_photo,
+        e.start_date AS start_date,
+        e.end_date AS end_date,
+        e.max_seat AS max_seat,
+        e.booked_seats AS booked_seats,
+        e.area AS area,
+        e.place_id AS place_id,
         u.profile_photo AS owner_profile_photo,
         u.name AS owner_name,
         COUNT(CASE WHEN jr.status = 'ACCEPTED' THEN 1 ELSE NULL END) AS booked_seats
@@ -79,14 +87,14 @@ export default component$(() => {
             bookedSeats={booked_seats}
           />
 
-          <div class="mb-8 flex max-w-sm justify-between">
+          {/* <div class="mb-8 flex max-w-sm justify-between">
             <Link
               href="/login"
               class="bg-primary hover:bg-primary-light focus:ring-primary-dark px-8 py-2 text-white focus:outline-none focus:ring-2 focus:ring-offset-2"
             >
               Download to Join
             </Link>
-          </div>
+          </div> */}
         </div>
         <div class="h-auto max-w-md flex-shrink-0">
           <img
