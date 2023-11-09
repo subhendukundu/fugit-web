@@ -1,0 +1,1 @@
+export const imageBaseUrl = "https://pub-9f8d4e93b1f34d2c95ff9f26a0b12b2e.r2.dev";

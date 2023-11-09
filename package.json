@@ -44,5 +44,9 @@
     "vite": "^4.4.11",
     "vite-tsconfig-paths": "^4.2.1",
     "wrangler": "^3.0.0"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.3.6",
+    "date-fns": "^2.30.0"
   }
 }
