@@ -27,6 +27,11 @@ export default component$(() => {
               Privacy Policy
             </a>
           </li>
+          <li>
+            <a href="/delete-data-request" class="mr-4 hover:underline md:mr-6">
+              Delete Data Request
+            </a>
+          </li>
         </ul>
       </div>
     </footer>

@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@libsql/client": "^0.3.6",
+    "@tsndr/cloudflare-worker-jwt": "^2.2.10",
     "date-fns": "^2.30.0"
   }
 }

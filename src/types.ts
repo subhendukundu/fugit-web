@@ -1,3 +1,18 @@
+export interface JwtUser {
+  iss: string;
+  aud: string;
+  auth_time: number;
+  user_id: string;
+  exp: number;
+  iat: number;
+  email: string;
+  avatar?: string;
+  name: string;
+  email_verified: boolean;
+  session_id?: string;
+  sign_in_provider: string;
+}
+
 export interface EventData {
   event_id?: string;
   title: string;
