@@ -12,7 +12,7 @@ export async function addDeleteRequest(
   }
   try {
     const db = tursoClient(req);
-    const result = await db.execute({
+    await db.execute({
       sql: `INSERT INTO user_data_deletion_request (accepted, user_id) VALUES (?, ?)`,
       args: [true, userId],
     });
