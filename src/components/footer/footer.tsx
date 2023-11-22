@@ -32,6 +32,11 @@ export default component$(() => {
               Delete Data Request
             </a>
           </li>
+          <li>
+            <a href="/support" class="mr-4 hover:underline md:mr-6">
+              Support
+            </a>
+          </li>
         </ul>
       </div>
     </footer>
